@@ -1,0 +1,20 @@
+[project]
+name = "prism"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "PauWol", email = "paul22wof@proton.me" }]
+requires-python = ">=3.11"
+dependencies = [
+    "cyclopts>=4.25.2",
+    "dotenv>=0.9.9",
+    "pythondialog>=3.5.3",
+    "typing-extensions>=4.16.0",
+]
+
+[project.scripts]
+prism = "prism.cli.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13.0"]
+build-backend = "uv_build"
