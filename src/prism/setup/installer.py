@@ -91,6 +91,7 @@ class Installer:
             "v4l-utils": "cec-ctl",
             "uv": "uv",
             "dialog": "dialog",
+            "mpv": "mpv",
         }
 
         executable = executables.get(dep)

@@ -10,6 +10,9 @@ dependencies = [
     "dotenv>=0.9.9",
     "pythondialog>=3.5.3",
     "typing-extensions>=4.16.0",
+    "pyyaml>=6.0.2",
+    "pillow>=10.4.0",
+    "requests>=2.32.0",
 ]
 
 [project.scripts]

@@ -191,10 +191,14 @@ LOG_BACKUP_COUNT = get_env_int(
     2,
 )
 
+# NOTE: "mpv" was added as a required external dependency. It's the media
+# player Prism drives (over its JSON IPC socket) to display images, text,
+# video, and audio -- and any combination of them -- on the TV.
 EXTERNAL_DEPENDENCIES = (
     "v4l-utils",
     "dialog",
     "uv",
+    "mpv",
 )
 
 COMMANDS = {
@@ -217,6 +221,13 @@ COMMANDS = {
         "-c",
         "curl -LsSf https://astral.sh/uv/install.sh | sh",
     ],
+    "mpv": [
+        "sudo",
+        "apt",
+        "install",
+        "-y",
+        "mpv",
+    ],
     "v4l-utils-remove": [
         "sudo",
         "apt",
@@ -236,6 +247,13 @@ COMMANDS = {
         "-f",
         "~/.local/bin/uv",
         "~/.local/bin/uvx",
+    ],
+    "mpv-remove": [
+        "sudo",
+        "apt",
+        "remove",
+        "-y",
+        "mpv",
     ],
 }
 
