@@ -1,6 +1,6 @@
 [project]
 name = "prism"
-version = "0.1.1"
+version = "0.1.2"
 description = "Turn a Raspberry Pi into a reliable HDMI-CEC media player / TV remote."
 readme = "README.md"
 authors = [{ name = "PauWol", email = "paul22wof@proton.me" }]
