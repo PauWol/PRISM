@@ -17,7 +17,6 @@
 </p>
 
 ## About
-
 Turn a Raspberry Pi into a reliable HDMI-CEC media player / TV remote.
 
 Prism plays images, text, video, and audio (in any combination) on a TV

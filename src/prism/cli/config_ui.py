@@ -8,6 +8,8 @@ persist them (only on explicit "Save and exit").
 
 from __future__ import annotations
 
+import subprocess
+
 from dialog import Dialog
 
 from prism.config import PrismConfig
@@ -24,6 +26,17 @@ class ConfigUI:
     # ------------------------------------------------------------------
 
     def run(self) -> PrismConfig:
+        try:
+            self._run_menu()
+        finally:
+            # `dialog` draws straight to the terminal and doesn't clean up
+            # after itself -- without this, its last screen (and any
+            # leftover borders/backtitle) stays visible once we exit.
+            self._restore_terminal()
+
+        return self.config
+
+    def _run_menu(self) -> None:
         while True:
             code, tag = self.dialog.menu(
                 "What would you like to configure?",
@@ -37,7 +50,7 @@ class ConfigUI:
             )
 
             if code != self.dialog.OK or tag == "5":
-                break
+                return
 
             if tag == "1":
                 self._edit_source()
@@ -55,11 +68,37 @@ class ConfigUI:
                     )
                     continue
 
-                path = self.config.save()
-                self.dialog.msgbox(f"Saved configuration to {path}")
-                break
+                if self._save_with_feedback():
+                    return
 
-        return self.config
+    def _save_with_feedback(self) -> bool:
+        """Save the config, showing a friendly dialog on failure instead of
+        letting a raw traceback (e.g. a permissions error) blow past the
+        `dialog` UI. Returns True if the caller should exit the menu."""
+        try:
+            path = self.config.save()
+        except OSError as exc:
+            self.dialog.msgbox(
+                "Couldn't save the configuration:\n\n"
+                f"{exc}\n\n"
+                "If you're saving to /etc/prism, try running this again "
+                "with sudo, or run `prism config` as your normal user to "
+                "save to ~/.config/prism instead (this is what the "
+                "systemd service uses too)."
+            )
+            return False
+
+        self.dialog.msgbox(f"Saved configuration to {path}")
+        return True
+
+    @staticmethod
+    def _restore_terminal() -> None:
+        try:
+            subprocess.run(["clear"], check=False)
+        except FileNotFoundError:
+            # `clear` isn't installed for some reason -- fall back to a
+            # raw ANSI "clear screen + move cursor home" sequence.
+            print("\033[2J\033[H", end="")
 
     # ------------------------------------------------------------------
     # Media source

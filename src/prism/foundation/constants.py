@@ -15,7 +15,26 @@ HOME_DIR = path(os.getenv("HOME", "~"))
 
 ENV_PATH = HOME_DIR / "prism" / ".env"
 
-CONFIG_DIR = Path("/etc/prism")
+
+def _default_config_dir() -> Path:
+    """
+    Return Prism's default config location.
+
+    Root/system installation (e.g. run via the systemd service as root, or
+    with sudo):
+        /etc/prism
+
+    User installation (the common case -- `prism config` run by hand as a
+    normal user):
+        ~/.config/prism
+    """
+    if hasattr(os, "geteuid") and os.geteuid() == 0:
+        return Path("/etc/prism")
+
+    return HOME_DIR / ".config" / "prism"
+
+
+CONFIG_DIR = _default_config_dir()
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
 
 
